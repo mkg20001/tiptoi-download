@@ -112,7 +112,7 @@ device() {
   jsonSelect "$tiptois" ".[] | (.vendor + .model)"
 
   MNT=$(echo "$item" | jq -r .mountpoint)
-  if [ -z "$MNT" ]; then
+  if [ -z "$MNT" ] && [ "$MNT" != "null" ]; then
     MNT=$(mktemp -d)
     log "Mounting under $MNT..."
     sudo mount /dev/"$(echo "$item" | jq -r .name)" "$MNT"
