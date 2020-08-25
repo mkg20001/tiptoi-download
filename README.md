@@ -2,7 +2,13 @@
 
 Simple script to download files onto your Tiptoi(r) device
 
-# Usage
+## Dependencies
+
+- nodejs
+- jq
+- curl
+
+## Usage
 
 Interactive:
 
