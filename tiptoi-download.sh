@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -175,7 +175,7 @@ if [ -z "$1" ]; then
   while true; do
     read -p "Search query: " input
     if [ ! -z "$input" ]; then
-      search "$input" || /bin/true
+      search "$input" || true
     fi
   done
 else
