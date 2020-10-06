@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -103,10 +103,13 @@ get_tiptois() {
 
 device() {
   get_tiptois
-  
+
   if [[ "$tiptois" == "[]" ]]; then
+    cmd_help
+
     err "No tiptois found"
     return 2
+
   fi
 
   jsonSelect "$tiptois" ".[] | (.vendor + .model)"
@@ -117,6 +120,36 @@ device() {
     log "Mounting under $MNT..."
     sudo mount /dev/"$(echo "$item" | jq -r .name)" "$MNT"
   fi
+}
+cmd_help(){
+  cat <<EOF
+usage: tiptoi-download [COMMAND]
+
+Interactive mode (no COMMAND given):
+  It will first ask which tiptoi to use, then enter a search query and select the right result. It will then get downloaded.
+
+    $ tiptoi-download
+    [0] Tiptoi  ZC3203L
+    Search query: schatzsuche
+    1565794684: Loading suggestions for 'schatzsuche'...
+    [0] tiptoi® CREATE Schatzsuche im Dschungel
+    [1] tiptoi® Schatzsuche in der Buchstabenburg
+    > 1
+
+COMMAND can be one of:
+
+  download TITLEID FOLDER:  Download a title to a given folder
+    PRODUCTID:                the id of the Book you want to download
+    FOLDER:                   the destination folder where to download
+
+  list:                     output a JSON list of all tiptois
+
+  search QUERY:             search for a product and output suggestions as JSON
+    QUERY:                    Query String
+
+  help:                     This help
+
+EOF
 }
 
 cmd_list() {
@@ -142,7 +175,7 @@ if [ -z "$1" ]; then
   while true; do
     read -p "Search query: " input
     if [ ! -z "$input" ]; then
-      search "$input" || /bin/true
+      search "$input" || true
     fi
   done
 else
